@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InfinityLibrary.Entities\InfinityLibrary.Entities.csproj" />
     <ProjectReference Include="..\InfinityLibrary.Shared\InfinityLibrary.Shared.csproj" />
   </ItemGroup>
 
