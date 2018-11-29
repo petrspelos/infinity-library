@@ -1,9 +1,10 @@
+using InfinityLibrary.Server.Models;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net.Mime;
 
@@ -25,6 +26,8 @@ namespace InfinityLibrary.Server
                     WasmMediaTypeNames.Application.Wasm,
                 });
             });
+
+            services.AddDbContext<BookContext>(options => options.UseSqlite("Data Source=InfinityLibrary.db"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
