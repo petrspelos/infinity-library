@@ -27,7 +27,7 @@ namespace InfinityLibrary.Server
                 });
             });
 
-            services.AddDbContext<BookContext>(options => options.UseSqlite("Data Source=InfinityLibrary.db"));
+            services.AddDbContext<InfinityDbContext>(options => options.UseSqlite("Data Source=InfinityLibrary.db"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
