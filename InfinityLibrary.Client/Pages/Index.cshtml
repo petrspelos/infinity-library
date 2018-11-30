@@ -25,7 +25,6 @@ else
     protected override async Task OnInitAsync()
     {
         Users = await Http.GetJsonAsync<User[]>("api/Users");
-        Console.WriteLine(Users.Length);
         Books = await Http.GetJsonAsync<Book[]>("api/Books");
     }
 
