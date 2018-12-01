@@ -28,7 +28,18 @@ else
         @foreach (var book in Books)
         {
             <hr />
-            <li><img src="@book.ThumbnailUrl" height="100" width="80"/> <b>@book.Title</b> by @book.Author</li>
+            <li>
+                @if (book.ThumbnailUrl == "None")
+                {
+                    <img src="https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw_400x400.jpg" height="100" width="80" />
+                }
+                else
+                {
+                    <img src="@book.ThumbnailUrl" height="100" width="80" />
+                }
+
+                <b>@book.Title</b> by @book.Author
+            </li>
         }
     </ul>
 }
