@@ -8,5 +8,15 @@
         public int PublicationYear { get; set; }
         public int Copies { get; set; }
         public string ThumbnailUrl { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Title} ({Genre}) by {Author}, {PublicationYear}. ({Copies} in this library)";
+        }
+
+        public override string ToShortString()
+        {
+            return $"{Title} by {Author}";
+        }
     }
 }

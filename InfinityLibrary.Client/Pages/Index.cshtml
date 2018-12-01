@@ -5,7 +5,11 @@
 @page "/"
 
 <CascadingValue Value="Users">
-    <SimpleUsersList></SimpleUsersList>
+    <EntityDropdown ref="UsersDropdown"></EntityDropdown>
+</CascadingValue>
+
+<CascadingValue Value="Books">
+    <EntityDropdown ref="BooksDropdown"></EntityDropdown>
 </CascadingValue>
 
 @if (Users is null)
@@ -51,16 +55,19 @@ else
 @functions
 {
 
-protected User[] Users { get; set; }
-protected Book[] Books { get; set; }
+    protected User[] Users { get; set; }
+    protected Book[] Books { get; set; }
 
-protected override async Task OnInitAsync()
-{
-    var usersJson = await Http.GetStringAsync("api/Users");
-    Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
+    private EntityDropdown UsersDropdown { get; set; }
+    private EntityDropdown BooksDropdown { get; set; }
 
-    var booksJson = await Http.GetStringAsync("api/Books");
-    Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
-}
+    protected override async Task OnInitAsync()
+    {
+        var usersJson = await Http.GetStringAsync("api/Users");
+        Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
+
+        var booksJson = await Http.GetStringAsync("api/Books");
+        Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
+    }
 
 }

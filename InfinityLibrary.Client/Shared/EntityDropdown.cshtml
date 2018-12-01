@@ -1,0 +1,37 @@
+﻿@using InfinityLibrary.Entities
+
+@if (Entities is null)
+{
+    <select class="form-control" disabled>
+        <option selected="selected">No items found</option>
+    </select>
+}
+else
+{
+    <select class="form-control" onchange="@OnSelected">
+        @foreach (var entity in Entities)
+        {
+            <option value="@entity.Id">@entity.ToShortString()</option>
+        }
+    </select>
+}
+
+@functions
+{
+
+    [CascadingParameter] protected Entity[] Entities { get; set; }
+
+    public long SelectedId { get; set; }
+
+    protected override void OnInit()
+    {
+        SelectedId = 0;
+    }
+
+    private void OnSelected(UIChangeEventArgs args)
+    {
+        var success = Int64.TryParse((string)args.Value, out var selection);
+        if (success) { SelectedId = selection; }
+    }
+
+}
