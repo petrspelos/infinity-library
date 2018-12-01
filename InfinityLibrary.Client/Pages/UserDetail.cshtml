@@ -34,7 +34,7 @@ else
             var json = await Http.GetStringAsync($"api/Users/{Id}");
             User = SimpleJson.DeserializeObject<User>(json, new UserSerializationStrategy());
         }
-        catch (Exception e)
+        catch (Exception)
         {
             User = null;
         }

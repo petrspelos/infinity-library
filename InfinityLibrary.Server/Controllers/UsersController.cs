@@ -105,7 +105,7 @@ namespace InfinityLibrary.Server.Controllers
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return Redirect("../Users");
+            return Redirect($"../userdetail/{user.Id}");
         }
 
         // DELETE: api/Users/5
