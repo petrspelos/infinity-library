@@ -1,9 +1,12 @@
-﻿namespace InfinityLibrary.Entities
+﻿using System;
+
+namespace InfinityLibrary.Entities
 {
     public class Reservation : Entity
     {
         public long UserId { get; set; }
         public long BookId { get; set; }
+        public DateTime Date { get; set; }
 
         public override string ToString()
         {
