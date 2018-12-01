@@ -28,7 +28,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser([FromRoute] ulong id)
+        public async Task<IActionResult> GetUser([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser([FromRoute] ulong id, [FromBody] User user)
+        public async Task<IActionResult> PutUser([FromRoute] long id, [FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] ulong id)
+        public async Task<IActionResult> DeleteUser([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -116,7 +116,7 @@ namespace InfinityLibrary.Server.Controllers
             return Ok(user);
         }
 
-        private bool UserExists(ulong id)
+        private bool UserExists(long id)
         {
             return _context.User.Any(e => e.Id == id);
         }

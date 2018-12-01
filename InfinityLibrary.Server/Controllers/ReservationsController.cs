@@ -28,7 +28,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // GET: api/Reservations/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetReservation([FromRoute] ulong id)
+        public async Task<IActionResult> GetReservation([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // PUT: api/Reservations/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation([FromRoute] ulong id, [FromBody] Reservation reservation)
+        public async Task<IActionResult> PutReservation([FromRoute] long id, [FromBody] Reservation reservation)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReservation([FromRoute] ulong id)
+        public async Task<IActionResult> DeleteReservation([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -116,7 +116,7 @@ namespace InfinityLibrary.Server.Controllers
             return Ok(reservation);
         }
 
-        private bool ReservationExists(ulong id)
+        private bool ReservationExists(long id)
         {
             return _context.Reservation.Any(e => e.Id == id);
         }

@@ -28,7 +28,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // GET: api/Books/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBook([FromRoute] ulong id)
+        public async Task<IActionResult> GetBook([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // PUT: api/Books/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook([FromRoute] ulong id, [FromBody] Book book)
+        public async Task<IActionResult> PutBook([FromRoute] long id, [FromBody] Book book)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook([FromRoute] ulong id)
+        public async Task<IActionResult> DeleteBook([FromRoute] long id)
         {
             if (!ModelState.IsValid)
             {
@@ -116,7 +116,7 @@ namespace InfinityLibrary.Server.Controllers
             return Ok(book);
         }
 
-        private bool BookExists(ulong id)
+        private bool BookExists(long id)
         {
             return _context.Book.Any(e => e.Id == id);
         }

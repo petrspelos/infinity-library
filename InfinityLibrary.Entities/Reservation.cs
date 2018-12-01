@@ -2,8 +2,8 @@
 {
     public class Reservation
     {
-        public ulong Id { get; set; }
-        public ulong UserId { get; set; }
-        public ulong BookId { get; set; }
+        public long Id { get; set; }
+        public long UserId { get; set; }
+        public long BookId { get; set; }
     }
 }

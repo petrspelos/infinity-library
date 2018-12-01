@@ -1,4 +1,6 @@
 ﻿@using InfinityLibrary.Entities
+@using InfinityLibrary.Shared
+@using SimpleJson
 @inject HttpClient Http
 @page "/"
 
@@ -24,8 +26,11 @@ else
 
     protected override async Task OnInitAsync()
     {
-        Users = await Http.GetJsonAsync<User[]>("api/Users");
-        Books = await Http.GetJsonAsync<Book[]>("api/Books");
+        var usersJson = await Http.GetStringAsync("api/Users");
+        Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
+
+        var booksJson = await Http.GetStringAsync("api/Books");
+        Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
     }
 
 }
