@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace InfinityLibrary.Server.Controllers
 {
@@ -120,6 +121,11 @@ namespace InfinityLibrary.Server.Controllers
             if (user == null)
             {
                 return NotFound();
+            }
+
+            if (_context.Reservation.Any(r => r.UserId == id))
+            {
+                return BadRequest("User has reservations");
             }
 
             _context.User.Remove(user);

@@ -1,4 +1,5 @@
-﻿@using InfinityLibrary.Entities
+﻿@using System.Net
+@using InfinityLibrary.Entities
 @using InfinityLibrary.Shared
 @using SimpleJson
 @inject HttpClient Http
@@ -24,8 +25,9 @@ else
                 <div class="d-flex w-100 justify-content-between">
                     <p class="mb-1">@user.DateOfBirth.ToShortDateString()<br/>@user.Address</p>
                     <div>
+                        <a href="userdetail/@user.Id" role="button" class="btn btn-secondary">Details</a>
                         <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-danger" onclick="@(() => DeleteUser(user.Id))">Delete</button>
                     </div>
                 </div>
             </div>
@@ -44,4 +46,18 @@ else
         FoundUsers = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
     }
 
+    private async void DeleteUser(long userId)
+    {
+        var response = await Http.DeleteAsync($"api/Users/{userId}");
+
+        if(response.IsSuccessStatusCode)
+        {
+            FoundUsers = FoundUsers.Where(u => u.Id != userId).ToArray();
+            StateHasChanged();
+        }
+        else if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            Console.WriteLine("User has reservations");
+        }
+    }
 }

@@ -1,0 +1,43 @@
+﻿@using System.Net
+@using InfinityLibrary.Entities
+@using InfinityLibrary.Shared
+@using SimpleJson
+@page "/userdetail/{Id:long}"
+@inject HttpClient Http
+
+@if (User is null)
+{
+    <p>This user does not exist...</p>
+}
+else if (User.Id == -1)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>@User.ToString()</p>
+}
+
+@functions
+{
+
+    [Parameter] long Id { get; set; }
+
+    private User User { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        User = new User() { Id = -1 };
+
+        try
+        {
+            var json = await Http.GetStringAsync($"api/Users/{Id}");
+            User = SimpleJson.DeserializeObject<User>(json, new UserSerializationStrategy());
+        }
+        catch (Exception e)
+        {
+            User = null;
+        }
+    }
+
+}

@@ -12,20 +12,6 @@
     <EntitySelector ref="BooksDropdown"></EntitySelector>
 </CascadingValue>
 
-@if (Users is null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <ul>
-        @foreach (var user in Users)
-        {
-            <li>@user.FirstName @user.LastName</li>
-        }
-    </ul>
-}
-
 @if (Books is null)
 {
     <p>Loading...</p>
