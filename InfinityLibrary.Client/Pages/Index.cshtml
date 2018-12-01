@@ -18,19 +18,34 @@ else
     </ul>
 }
 
+@if (Books is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        @foreach (var book in Books)
+        {
+            <hr />
+            <li><img src="@book.ThumbnailUrl" height="100" width="80"/> <b>@book.Title</b> by @book.Author</li>
+        }
+    </ul>
+}
+
 @functions
 {
 
-    private User[] Users { get; set; }
-    private Book[] Books { get; set; }
+private User[] Users { get; set; }
+private Book[] Books { get; set; }
 
-    protected override async Task OnInitAsync()
-    {
-        var usersJson = await Http.GetStringAsync("api/Users");
-        Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
+protected override async Task OnInitAsync()
+{
+    var usersJson = await Http.GetStringAsync("api/Users");
+    Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
 
-        var booksJson = await Http.GetStringAsync("api/Books");
-        Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
-    }
+    var booksJson = await Http.GetStringAsync("api/Books");
+    Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
+}
 
 }

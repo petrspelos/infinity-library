@@ -7,7 +7,7 @@
         public string Genre { get; set; }
         public string Author { get; set; }
         public int PublicationYear { get; set; }
-        public uint Copies { get; set; }
+        public int Copies { get; set; }
         public string ThumbnailUrl { get; set; }
     }
 }
