@@ -1,0 +1,51 @@
+﻿@using InfinityLibrary.Entities
+
+@if (Entities is null)
+{
+    <select class="custom-select" size="1" disabled>
+        <option selected="selected">No items found</option>
+    </select>
+}
+else
+{
+    <div class="form-row mt-2">
+        <div class="form-group mb-2 col-12">
+            <input type="text" class="form-control" bind="@Filter" aria-describedby="filterHint"/>
+            <small id="filterHint" class="form-text text-muted">
+                Press ENTER or click away to apply the filter.
+            </small>
+        </div>
+    </div>
+    <div class="form-row">
+        <select class="custom-select" size="5" onchange="@OnSelected">
+            @foreach (var entity in Entities)
+            {
+                @if (!entity.ToShortString().ToLower().Contains(Filter.ToLower())) { continue; }
+                <option value="@entity.Id">@entity.ToShortString()</option>
+            }
+        </select>
+    </div>
+}
+
+@functions
+{
+
+    [CascadingParameter] protected Entity[] Entities { get; set; }
+
+    public long SelectedId { get; set; }
+
+    private string Filter { get; set; }
+
+    protected override void OnInit()
+    {
+        SelectedId = 0;
+        Filter = "";
+    }
+
+    private void OnSelected(UIChangeEventArgs args)
+    {
+        var success = Int64.TryParse((string)args.Value, out var selection);
+        if (success) { SelectedId = selection; }
+    }
+
+}

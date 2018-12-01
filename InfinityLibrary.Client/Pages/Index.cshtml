@@ -5,11 +5,11 @@
 @page "/"
 
 <CascadingValue Value="Users">
-    <EntityDropdown ref="UsersDropdown"></EntityDropdown>
+    <EntitySelector ref="UsersDropdown"></EntitySelector>
 </CascadingValue>
 
 <CascadingValue Value="Books">
-    <EntityDropdown ref="BooksDropdown"></EntityDropdown>
+    <EntitySelector ref="BooksDropdown"></EntitySelector>
 </CascadingValue>
 
 @if (Users is null)
@@ -37,15 +37,7 @@ else
         {
             <hr />
             <li>
-                @if (book.ThumbnailUrl == "None")
-                {
-                    <img src="https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw_400x400.jpg" height="100" width="80" />
-                }
-                else
-                {
-                    <img src="@book.ThumbnailUrl" height="100" width="80" />
-                }
-
+                <img src="@((book.ThumbnailUrl == "None") ? MissingImageUrl : book.ThumbnailUrl)" height="100" width="80" />
                 <b>@book.Title</b> by @book.Author
             </li>
         }
@@ -54,12 +46,14 @@ else
 
 @functions
 {
-
+    
     protected User[] Users { get; set; }
     protected Book[] Books { get; set; }
 
-    private EntityDropdown UsersDropdown { get; set; }
-    private EntityDropdown BooksDropdown { get; set; }
+    private EntitySelector UsersDropdown { get; set; }
+    private EntitySelector BooksDropdown { get; set; }
+
+    private string MissingImageUrl = "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw_400x400.jpg";
 
     protected override async Task OnInitAsync()
     {

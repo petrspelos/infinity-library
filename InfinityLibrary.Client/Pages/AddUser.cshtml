@@ -1,0 +1,56 @@
+﻿@page "/AddUser"
+@inject HttpClient Http
+
+<form class="was-validated" method="post" action="api/Users">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="FirstName">First Name</label>
+            <input name="FirstName" type="text" class="form-control" id="FirstName" placeholder="Jon" required>
+            <div class="invalid-feedback">First name must be filled.</div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="LastName">Last Name</label>
+            <input name="LastName" type="text" class="form-control" id="LastName" placeholder="Doe" required>
+            <div class="invalid-feedback">Last name must be filled.</div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="Email">Email</label>
+            <input name="Email" type="email" class="form-control" id="Email" placeholder="example@example.com" required>
+            <div class="invalid-feedback">Must be a valid email address.</div>
+        </div>
+        <div class="form-group col-md-6">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="DayOfBirth">Day of birth</label>
+                    <input name="DayOfBirth" type="number" class="form-control" id="DayOfBirth" placeholder="25" min="1" max="30" required>
+                    <div class="invalid-feedback">Must be a number between 1 and 30 (inclusive).</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="MonthOfBirth">Month of birth</label>
+                    <input name="MonthOfBirth" type="number" class="form-control" id="MonthOfBirth" placeholder="7" min="1" max="12" required>
+                    <div class="invalid-feedback">Must be a number between 1 and 12 (inclusive).</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="YearOfBirth">Year of birth</label>
+                    <input name="YearOfBirth" type="number" class="form-control" id="YearOfBirth" placeholder="1990" min="1959" max="@DateTime.Now.Year" required>
+                    <div class="invalid-feedback">Must be a whole number between 1959 and @DateTime.Now.Year.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Address">Address</label>
+        <input name="Address" type="text" class="form-control" id="Address" placeholder="1234 Main St" required>
+        <div class="invalid-feedback">Address must be filled.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@functions
+{
+    
+
+
+}

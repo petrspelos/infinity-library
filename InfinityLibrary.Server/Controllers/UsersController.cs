@@ -1,4 +1,5 @@
-﻿using InfinityLibrary.Entities;
+﻿using System;
+using InfinityLibrary.Entities;
 using InfinityLibrary.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -82,17 +83,28 @@ namespace InfinityLibrary.Server.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] User user)
+        public async Task<IActionResult> PostUser([FromForm] ClientNewUserModel userModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var dateOfBirth = new DateTime(userModel.YearOfBirth, userModel.MonthOfBirth, userModel.DayOfBirth);
+
+            var user = new User
+            {
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                Address = userModel.Address,
+                DateOfBirth = dateOfBirth,
+                Email = userModel.Email
+            };
+
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUser", new { id = user.Id }, userModel);
         }
 
         // DELETE: api/Users/5
