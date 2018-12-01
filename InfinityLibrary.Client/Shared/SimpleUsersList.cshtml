@@ -1,0 +1,17 @@
+﻿@using InfinityLibrary.Entities
+
+@if (Users is null)
+{
+    <p>Cascading Parameter is null</p>
+}
+else
+{
+    <p>Waah</p>
+}
+
+@functions
+{
+
+    [CascadingParameter] protected User[] Users { get; set; }
+    
+}

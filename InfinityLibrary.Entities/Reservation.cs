@@ -1,8 +1,7 @@
 ﻿namespace InfinityLibrary.Entities
 {
-    public class Reservation
+    public class Reservation : Entity
     {
-        public long Id { get; set; }
         public long UserId { get; set; }
         public long BookId { get; set; }
     }

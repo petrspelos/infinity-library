@@ -1,8 +1,7 @@
 ﻿namespace InfinityLibrary.Entities
 {
-    public class Book
+    public class Book : Entity
     {
-        public long Id { get; set; }
         public string Title { get; set; }
         public string Genre { get; set; }
         public string Author { get; set; }

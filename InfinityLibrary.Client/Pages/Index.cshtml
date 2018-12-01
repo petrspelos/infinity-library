@@ -4,6 +4,10 @@
 @inject HttpClient Http
 @page "/"
 
+<CascadingValue Value="Users">
+    <SimpleUsersList></SimpleUsersList>
+</CascadingValue>
+
 @if (Users is null)
 {
     <p>Loading...</p>
@@ -47,8 +51,8 @@ else
 @functions
 {
 
-private User[] Users { get; set; }
-private Book[] Books { get; set; }
+protected User[] Users { get; set; }
+protected Book[] Books { get; set; }
 
 protected override async Task OnInitAsync()
 {
