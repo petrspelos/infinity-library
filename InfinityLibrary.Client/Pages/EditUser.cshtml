@@ -60,7 +60,7 @@ else
             <input bind="Address" name="Address" type="text" class="form-control" id="Address" placeholder="1234 Main St" required />
             <div class="invalid-feedback">Address must be filled.</div>
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-6 pl-0 pr-2">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Membership valid till</h5>
@@ -77,14 +77,15 @@ else
                         </div>
                         <div class="form-group col-md-4">
                             <label for="MembershipEndYear">Year</label>
-                            <input bind="MembershipEndYear" name="MembershipEndYear" type="number" class="form-control" id="MembershipEndYear" placeholder="1990" min="@DateTime.Now.Year" max="@(DateTime.Now.Year + 5)" required />
-                            <div class="invalid-feedback">Must be a whole number between @DateTime.Now.Year and @(DateTime.Now.Year + 5).</div>
+                            <input bind="MembershipEndYear" name="MembershipEndYear" type="number" class="form-control" id="MembershipEndYear" placeholder="1990" min="0" max="@(DateTime.Now.Year + 5)" required />
+                            <div class="invalid-feedback">Must be a whole number between 0 and @(DateTime.Now.Year + 5).</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
+        <a href="userdetail/@Id" role="button" class="btn btn-secondary">Back to details</a>
     </form>
 }
 

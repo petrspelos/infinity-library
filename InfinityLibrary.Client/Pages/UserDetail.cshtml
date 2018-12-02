@@ -14,29 +14,74 @@ else if (User.Id == -1)
 }
 else
 {
-    <p>@User.ToString()</p>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="FirstName">First Name</label>
+            <input bind="User.FirstName" name="FirstName" type="text" class="form-control" id="FirstName" readonly />
+        </div>
+        <div class="form-group col-md-6">
+            <label for="LastName">Last Name</label>
+            <input bind="User.LastName" name="LastName" type="text" class="form-control" id="LastName" readonly />
+            <div class="invalid-feedback">Last name must be filled.</div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="Email">Email</label>
+            <input bind="User.Email" name="Email" type="email" class="form-control" id="Email" placeholder="example@example.com" readonly />
+            <div class="invalid-feedback">Must be a valid email address.</div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="DayOfBirth">Date of birth</label>
+            <input value="@User.DateOfBirth.ToShortDateString()" type="text" class="form-control" id="DayOfBirth" readonly />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Address">Address</label>
+        <input bind="User.Address" name="Address" type="text" class="form-control" id="Address" placeholder="1234 Main St" readonly />
+        <div class="invalid-feedback">Address must be filled.</div>
+    </div>
+    <div class="form-group col-md-6 p-0 m-0 pr-2">
+        <div class="card text-white @(User.MembershipValidTill < DateTime.Now ? "bg-danger" : "bg-success")">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="MembershipEndMonth">Membership valid till</label>
+                        <input value="@User.MembershipValidTill.ToShortDateString()" type="text" class="form-control" id="MembershipEndMonth" readonly />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="Today">Today</label>
+                        <input value="@DateTime.Now.ToShortDateString()" type="text" class="form-control" id="Today" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a href="edituser/@User.Id" role="button" class="btn btn-primary">Edit</a>
+    </div>
 }
 
 @functions
 {
 
-    [Parameter] long Id { get; set; }
+[Parameter] long Id { get; set; }
 
-    private User User { get; set; }
+private User User { get; set; }
 
-    protected override async Task OnInitAsync()
+protected override async Task OnInitAsync()
+{
+    User = new User() { Id = -1 };
+
+    try
     {
-        User = new User() { Id = -1 };
-
-        try
-        {
-            var json = await Http.GetStringAsync($"api/Users/{Id}");
-            User = SimpleJson.DeserializeObject<User>(json, new UserSerializationStrategy());
-        }
-        catch (Exception)
-        {
-            User = null;
-        }
+        var json = await Http.GetStringAsync($"api/Users/{Id}");
+        User = SimpleJson.DeserializeObject<User>(json, new UserSerializationStrategy());
     }
+    catch (Exception)
+    {
+        User = null;
+    }
+}
 
 }
