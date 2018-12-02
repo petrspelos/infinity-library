@@ -92,7 +92,7 @@ namespace InfinityLibrary.Server.Controllers
 
         // POST: api/Books
         [HttpPost]
-        public async Task<IActionResult> PostBook([FromBody] Book book)
+        public async Task<IActionResult> PostBook([FromForm] Book book)
         {
             if (!ModelState.IsValid)
             {
@@ -102,7 +102,7 @@ namespace InfinityLibrary.Server.Controllers
             _context.Book.Add(book);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBook", new { id = book.Id }, book);
+            return Redirect($"../bookdetail/{book.Id}");
         }
 
         // DELETE: api/Books/5
