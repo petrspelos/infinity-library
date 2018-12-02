@@ -1,0 +1,89 @@
+﻿@page "/EditBook/{Id:long}"
+@inject HttpClient Http
+
+@if (State == PageState.Loading)
+{
+    <p>Loading...</p>
+}
+else if (State == PageState.Error)
+{
+    <p>Sorry, there was an error with your request.</p>
+    <p>Please try again in a little bit.</p>
+}
+else
+{
+    <form class="was-validated" method="post" action="api/Books/Update/@BookToEdit.Id">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="Title">Title</label>
+                <input name="Title" type="text" class="form-control" id="Title" placeholder="The book's title" value="@BookToEdit.Title" required>
+                <div class="invalid-feedback">The book's title must be filled.</div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Genre">Genre</label>
+                <input name="Genre" type="text" class="form-control" id="Genre" placeholder="The book's genre" value="@BookToEdit.Genre" required>
+                <div class="invalid-feedback">The book's genre must be filled.</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="Author">Author / Authors</label>
+                <input name="Author" type="text" class="form-control" id="Author" placeholder="The book's author or authors" value="@BookToEdit.Author" required>
+                <div class="invalid-feedback">The book's author/authors must be filled.</div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="PublicationYear">Year of publication</label>
+                <input name="PublicationYear" type="number" class="form-control" id="PublicationYear" placeholder="The book's year of publication" max="@DateTime.Today.Year" value="@BookToEdit.PublicationYear" required>
+                <div class="invalid-feedback">The book's publication year must be filled. Max value is @(DateTime.Today.Year).</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="Copies">Copies in this library</label>
+                <input name="Copies" type="number" class="form-control" id="Copies" placeholder="1" min="0" value="@BookToEdit.Copies" required>
+                <div class="invalid-feedback">The number of copies must be filled. Minimum: 0</div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="ThumbnailUrl">Book's Thumbnail URL</label>
+                <input name="ThumbnailUrl" type="text" class="form-control" id="ThumbnailUrl" placeholder="The book's thumbnail URL" value="@BookToEdit.ThumbnailUrl" required>
+                <div class="invalid-feedback">The book's thumbnail URL must be filled. Type "None" for default.</div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+}
+
+@functions
+{
+
+    [Parameter] protected long Id { get; set; }
+
+    public Book BookToEdit { get; set; }
+
+    private PageState State { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        State = PageState.Loading;
+
+        try
+        {
+            var json = await Http.GetStringAsync($"api/Books/{Id}");
+            BookToEdit = SimpleJson.DeserializeObject<Book>(json, new BookSerializationStrategy());
+
+            State = PageState.Ready;
+        }
+        catch (Exception)
+        {
+            State = PageState.Error;
+        }
+    }
+
+    private enum PageState
+    {
+        Loading = 0,
+        Ready = 1,
+        Error = 2
+    }
+
+}

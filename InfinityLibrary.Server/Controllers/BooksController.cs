@@ -55,16 +55,35 @@ namespace InfinityLibrary.Server.Controllers
             return Ok(book);
         }
 
-        // PUT: api/Books/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook([FromRoute] long id, [FromBody] Book book)
+        // POST: api/Books
+        [HttpPost]
+        public async Task<IActionResult> PostBook([FromForm] Book book)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != book.Id)
+            _context.Book.Add(book);
+            await _context.SaveChangesAsync();
+
+            return Redirect($"../bookdetail/{book.Id}");
+        }
+
+        // POST: api/Books/Update/5
+        [HttpPost("Update/{id}")]
+        public async Task<IActionResult> PutBook([FromRoute] long id, [FromForm] Book book)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            book.Id = id;
+            
+            var rentedCopiesCount = _context.Reservation.Count(r => r.BookId == id);
+
+            if (book.Copies < rentedCopiesCount)
             {
                 return BadRequest();
             }
@@ -87,22 +106,7 @@ namespace InfinityLibrary.Server.Controllers
                 }
             }
 
-            return NoContent();
-        }
-
-        // POST: api/Books
-        [HttpPost]
-        public async Task<IActionResult> PostBook([FromForm] Book book)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _context.Book.Add(book);
-            await _context.SaveChangesAsync();
-
-            return Redirect($"../bookdetail/{book.Id}");
+            return Redirect($"../../../bookdetail/{book.Id}");
         }
 
         // DELETE: api/Books/5
