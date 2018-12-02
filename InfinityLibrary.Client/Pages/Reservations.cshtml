@@ -43,6 +43,8 @@ else
         {
             var reservationsJson = await Http.GetStringAsync("api/Reservations/Models");
 
+            Console.WriteLine(reservationsJson);
+
             FoundReservations = SimpleJson
                 .DeserializeObject<ReservedBookModel[]>(reservationsJson, new ReservedBookSerializationStrategy())
                 .OrderByDescending(b => b.ReservationDate)
@@ -50,8 +52,9 @@ else
 
             State = PageState.Ready;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             State = PageState.Error;
         }
     }

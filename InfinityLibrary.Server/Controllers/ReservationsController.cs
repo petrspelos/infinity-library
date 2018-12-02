@@ -1,4 +1,5 @@
-﻿using InfinityLibrary.Entities;
+﻿using System;
+using InfinityLibrary.Entities;
 using InfinityLibrary.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -103,17 +104,19 @@ namespace InfinityLibrary.Server.Controllers
 
         // POST: api/Reservations
         [HttpPost]
-        public async Task<IActionResult> PostReservation([FromBody] Reservation reservation)
+        public async Task<IActionResult> PostReservation([FromForm] Reservation reservation)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            reservation.Date = DateTime.Today;
+
             _context.Reservation.Add(reservation);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
+            return Redirect($"../userdetail/{reservation.UserId}");
         }
 
         // DELETE: api/Reservations/5
