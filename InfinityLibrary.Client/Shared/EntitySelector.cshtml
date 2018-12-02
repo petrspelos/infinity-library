@@ -10,20 +10,21 @@ else
 {
     <div class="form-row mt-2">
         <div class="form-group mb-2 col-12">
-            <input type="text" class="form-control" bind="@Filter" aria-describedby="filterHint"/>
+            <input type="text" class="form-control" bind="@Filter" aria-describedby="filterHint" placeholder="Filter"/>
             <small id="filterHint" class="form-text text-muted">
                 Press ENTER or click away to apply the filter.
             </small>
         </div>
     </div>
     <div class="form-row">
-        <select class="custom-select" size="5" onchange="@OnSelected">
+        <select name="@ControlNameAndId" id="@ControlNameAndId" class="custom-select" size="5" onchange="@OnSelected" required>
             @foreach (var entity in Entities)
             {
                 @if (!entity.ToShortString().ToLower().Contains(Filter.ToLower())) { continue; }
                 <option value="@entity.Id">@entity.ToShortString()</option>
             }
         </select>
+        <div class="invalid-feedback">One item must be selected.</div>
     </div>
 }
 
@@ -31,6 +32,8 @@ else
 {
 
     [CascadingParameter] protected Entity[] Entities { get; set; }
+
+    [Parameter] protected string ControlNameAndId { get; set; }
 
     public long SelectedId { get; set; }
 

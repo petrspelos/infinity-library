@@ -6,7 +6,7 @@ namespace InfinityLibrary.Entities
     {
         public long UserId { get; set; }
         public long BookId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
         public override string ToString()
         {

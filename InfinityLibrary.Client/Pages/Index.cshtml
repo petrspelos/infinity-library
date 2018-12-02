@@ -1,16 +1,6 @@
-﻿@using InfinityLibrary.Entities
-@using InfinityLibrary.Shared
-@using SimpleJson
-@inject HttpClient Http
+﻿@inject HttpClient Http
 @page "/"
 
-<CascadingValue Value="Users">
-    <EntitySelector ref="UsersDropdown"></EntitySelector>
-</CascadingValue>
-
-<CascadingValue Value="Books">
-    <EntitySelector ref="BooksDropdown"></EntitySelector>
-</CascadingValue>
 
 @if (Books is null)
 {
@@ -36,8 +26,6 @@ else
     protected User[] Users { get; set; }
     protected Book[] Books { get; set; }
 
-    private EntitySelector UsersDropdown { get; set; }
-    private EntitySelector BooksDropdown { get; set; }
 
     private string MissingImageUrl = "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw_400x400.jpg";
 

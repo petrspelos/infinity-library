@@ -1,0 +1,69 @@
+﻿@page "/AddReservation"
+@inject HttpClient Http
+
+<p>New Reservation form</p>
+
+@if (State == PageState.Loading)
+{
+    <p>Loading...</p>
+}
+else if (State == PageState.Error)
+{
+    <p>Sorry, there was an error with your request.</p>
+}
+else
+{
+    <form class="was-validated" method="post" action="#">
+        <div class="form-row">
+            <div class="form-group col-md-6 pr-2">
+                <h5>User</h5>
+                <CascadingValue Value="Users">
+                    <EntitySelector ref="UsersDropdown" ControlNameAndId="UserId"></EntitySelector>
+                </CascadingValue>
+            </div>
+            <div class="form-group col-md-6 pl-2">
+                <h5>Book</h5>
+                <CascadingValue Value="Books">
+                    <EntitySelector ref="BooksDropdown" ControlNameAndId="BookId"></EntitySelector>
+                </CascadingValue>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+}
+
+@functions
+{
+private PageState State { get; set; }
+protected User[] Users { get; set; }
+protected Book[] Books { get; set; }
+private EntitySelector UsersDropdown { get; set; }
+private EntitySelector BooksDropdown { get; set; }
+
+protected override async Task OnInitAsync()
+{
+    State = PageState.Loading;
+
+    try
+    {
+        var usersJson = await Http.GetStringAsync("api/Users");
+        Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
+
+        var booksJson = await Http.GetStringAsync("api/Books/Rentable");
+        Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
+
+        State = PageState.Ready;
+    }
+    catch (Exception)
+    {
+        State = PageState.Error;
+    }
+}
+
+private enum PageState
+{
+    Loading = 0,
+    Ready = 1,
+    Error = 2
+}
+}

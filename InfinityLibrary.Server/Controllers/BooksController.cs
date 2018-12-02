@@ -26,6 +26,16 @@ namespace InfinityLibrary.Server.Controllers
             return _context.Book;
         }
 
+        // GET: api/Books/Rentable
+        [HttpGet("Rentable")]
+        public IEnumerable<Book> GetBooksRentable()
+        {
+            var allBooks = _context.Book.ToList();
+            var allReservations = _context.Reservation.ToList();
+
+            return allBooks.Where(b => b.Copies > allReservations.Count(r => r.BookId == b.Id));
+        }
+
         // GET: api/Books/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBook([FromRoute] long id)
