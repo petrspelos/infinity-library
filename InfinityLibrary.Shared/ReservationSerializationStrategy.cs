@@ -9,7 +9,8 @@ namespace InfinityLibrary.Shared
         {
             { "Id", "id" },
             { "UserId", "userId" },
-            { "BookId", "bookId" }
+            { "BookId", "bookId" },
+            { "Date", "date" }
         };
 
         protected override string MapClrMemberNameToJsonFieldName(string jsonFieldName)

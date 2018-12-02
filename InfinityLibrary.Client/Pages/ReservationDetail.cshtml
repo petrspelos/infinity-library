@@ -1,10 +1,78 @@
-﻿@page "/reservationdetail/{Id:long}"
+﻿@using InfinityLibrary.Entities
+@using InfinityLibrary.Shared
+@using SimpleJson
+@page "/reservationdetail/{Id:long}"
+@inject HttpClient Http
 
-<p>Reservation detail</p>
+@if (State == DetailState.Loading)
+{
+    <p>Loading...</p>
+}
+else if (State == DetailState.NotFound)
+{
+    <p>This reservation was not found.</p>
+}
+else
+{
+    <div class="form-row">
+        <div class="col">
+            <label for="user">User</label>
+            <textarea style="resize: none;" rows="6" id="user" value="@User.ToString()" type="text" class="form-control" readonly></textarea>
+        </div>
+        <div class="col">
+            <label for="book">Book</label>
+            <textarea style="resize: none;" rows="6" id="book" value="@Book.ToString()" type="text" class="form-control" readonly></textarea>
+        </div>
+    </div>
+    <div class="form-row mt-2">
+        <div class="col">
+            <label for="user">Reservation details</label>
+            <textarea style="resize: none;" rows="6" id="user" type="text" class="form-control" readonly>Rented @(DateTime.Now.Subtract(RentDate).Days) day(s) ago on @RentDate.ToShortDateString()</textarea>
+        </div>
+    </div>
+
+    <button class="btn btn-danger mt-2">Close reservation</button>
+}
 
 @functions
 {
 
-    [Parameter] protected long Id { get; set; }
+[Parameter] protected long Id { get; set; }
+
+private DetailState State { get; set; } = DetailState.Loading;
+private User User { get; set; }
+private Book Book { get; set; }
+private DateTime RentDate { get; set; }
+
+protected override async Task OnInitAsync()
+{
+    try
+    {
+        var reservationJson = await Http.GetStringAsync($"api/Reservations/{Id}");
+        var reservation = SimpleJson.DeserializeObject<Reservation>(reservationJson, new ReservationSerializationStrategy());
+
+        RentDate = reservation.Date;
+
+        var userJson = await Http.GetStringAsync($"api/Users/{reservation.UserId}");
+        var bookJson = await Http.GetStringAsync($"api/Books/{reservation.UserId}");
+
+        User = SimpleJson.DeserializeObject<User>(userJson, new UserSerializationStrategy());
+        Book = SimpleJson.DeserializeObject<Book>(bookJson, new BookSerializationStrategy());
+
+        State = DetailState.Found;
+    }
+    catch (Exception)
+    {
+        Console.WriteLine("Exception was thrown");
+        State = DetailState.NotFound;
+    }
+}
+
+private enum DetailState
+{
+    Loading = 0,
+    NotFound = 1,
+    Found = 2
+}
 
 }
