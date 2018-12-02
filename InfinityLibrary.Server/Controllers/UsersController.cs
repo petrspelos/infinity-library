@@ -29,6 +29,13 @@ namespace InfinityLibrary.Server.Controllers
             return _context.User;
         }
 
+        // GET: api/Users
+        [HttpGet("WithMembership")]
+        public IEnumerable<User> GetUserWithMembership()
+        {
+            return _context.User.Where(u => u.HasValidMembership);
+        }
+
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] long id)

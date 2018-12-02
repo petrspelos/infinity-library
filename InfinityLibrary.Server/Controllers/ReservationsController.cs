@@ -113,6 +113,21 @@ namespace InfinityLibrary.Server.Controllers
 
             reservation.Date = DateTime.Today;
 
+            var renter = _context.User.Find(reservation.UserId);
+            var book = _context.Book.Find(reservation.BookId);
+
+            if (renter is null || book is null || renter.MembershipValidTill < DateTime.Now)
+            {
+                return BadRequest();
+            }
+
+            var rentedCopiesCount = _context.Reservation.Count(r => r.BookId == book.Id);
+
+            if (book.Copies <= rentedCopiesCount)
+            {
+                return BadRequest();
+            }
+
             _context.Reservation.Add(reservation);
             await _context.SaveChangesAsync();
 
