@@ -10,18 +10,23 @@
 else
 {
     <a class="btn btn-success mb-3" href="AddBook" role="button"><span class="oi oi-plus" aria-hidden="true"></span> Add new book</a>
-    <ul>
+    <div class="list-group">
         @foreach (var book in Books)
         {
-            <hr />
-            <li>
-                <img src="@((book.ThumbnailUrl == "None") ? MissingImageUrl : book.ThumbnailUrl)" height="100" width="80" />
-                <b>@book.Title</b> by @book.Author
-                <a href="bookdetail/@book.Id" role="button" class="btn btn-primary">Details</a>
-                <button class="btn btn-danger" onclick="@(() => DeleteBook(book.Id))">Delete</button>
-            </li>
+            <a href="#" class="list-group-item list-group-item-action flex-row align-items-stretch d-flex">
+                <div class="d-flex justify-content-center align-content-center w-25">
+                    <img src="@((book.ThumbnailUrl == "None") ? MissingImageUrl : book.ThumbnailUrl)" height="100" width="80" />
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-75">
+                    <h5 class="mb-1" style="max-width: 70%"><b>@book.Title</b> by @book.Author</h5>
+                    <div>
+                        <a href="bookdetail/@book.Id" role="button" class="btn btn-primary">Details</a>
+                        <button class="btn btn-danger" onclick="@(() => DeleteBook(book.Id))">Delete</button>
+                    </div>
+                </div>
+            </a>
         }
-    </ul>
+    </div>
 }
 
 @functions

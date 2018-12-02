@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Web;
+using InfinityLibrary.Shared;
 
 namespace InfinityLibrary.Server.Controllers
 {
@@ -85,7 +88,7 @@ namespace InfinityLibrary.Server.Controllers
 
             if (book.Copies < rentedCopiesCount)
             {
-                return BadRequest();
+                return Redirect($"../../../error/{ErrorMessage.InvalidBookCountEdit.ToString()}");
             }
 
             _context.Entry(book).State = EntityState.Modified;
