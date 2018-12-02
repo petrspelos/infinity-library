@@ -23,7 +23,13 @@ else
                     <small>@user.Email</small>
                 </div>
                 <div class="d-flex w-100 justify-content-between">
-                    <p class="mb-1">@user.DateOfBirth.ToShortDateString()<br/>@user.Address</p>
+                    <p class="mb-1">
+                        @user.DateOfBirth.ToShortDateString()<br/>@user.Address<br/>
+                        @if (@user.MembershipValidTill < DateTime.Now)
+                        {
+                            <small class="text-danger">No valid membership</small>
+                        }
+                    </p>
                     <div>
                         <a href="userdetail/@user.Id" role="button" class="btn btn-secondary">Details</a>
                         <a href="edituser/@user.Id" role="button" class="btn btn-primary">Edit</a>
