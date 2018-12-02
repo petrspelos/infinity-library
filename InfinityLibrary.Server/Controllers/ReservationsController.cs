@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InfinityLibrary.Shared.SharedModels;
 
 namespace InfinityLibrary.Server.Controllers
 {
@@ -43,6 +44,19 @@ namespace InfinityLibrary.Server.Controllers
             }
 
             return Ok(reservation);
+        }
+
+        // GET: api/Reservations/ForUser/5
+        [HttpGet("ForUser/{id}")]
+        public IEnumerable<ReservedBookModel> GetReservationsForUser([FromRoute] long id)
+        {
+            var reservedBooks = _context.Reservation
+                .Where(r => r.UserId == id)
+                .AsEnumerable()
+                .Select(ReservationToReservedBook)
+                .ToList();
+
+            return !reservedBooks.Any() ? new List<ReservedBookModel>() : reservedBooks;
         }
 
         // PUT: api/Reservations/5
@@ -119,6 +133,24 @@ namespace InfinityLibrary.Server.Controllers
         private bool ReservationExists(long id)
         {
             return _context.Reservation.Any(e => e.Id == id);
+        }
+
+        private ReservedBookModel ReservationToReservedBook(Reservation reservation)
+        {
+            var book = _context.Book.Find(reservation.BookId);
+
+            return new ReservedBookModel
+            {
+                Id = book.Id,
+                ThumbnailUrl = book.ThumbnailUrl,
+                PublicationYear = book.PublicationYear,
+                Copies = book.Copies,
+                Author = book.Author,
+                Title = book.Title,
+                Genre = book.Genre,
+                ReservationId = reservation.Id,
+                ReservationDate = reservation.Date
+            };
         }
     }
 }

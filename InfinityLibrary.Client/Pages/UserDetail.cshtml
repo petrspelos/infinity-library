@@ -1,5 +1,6 @@
 ﻿@using InfinityLibrary.Entities
 @using InfinityLibrary.Shared
+@using InfinityLibrary.Shared.SharedModels
 @using SimpleJson
 @page "/userdetail/{Id:long}"
 @inject HttpClient Http
@@ -41,18 +42,37 @@ else
         <input bind="User.Address" name="Address" type="text" class="form-control" id="Address" placeholder="1234 Main St" readonly />
         <div class="invalid-feedback">Address must be filled.</div>
     </div>
-    <div class="form-group col-md-6 p-0 m-0 pr-2">
-        <div class="card text-white @(User.MembershipValidTill < DateTime.Now ? "bg-danger" : "bg-success")">
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="MembershipEndMonth">Membership valid till</label>
-                        <input value="@User.MembershipValidTill.ToShortDateString()" type="text" class="form-control" id="MembershipEndMonth" readonly />
+    <div class="form-group col-md-12 p-0 m-0 pr-2">
+        <div class="form-row">
+            <div class="card text-white w-100 @(User.MembershipValidTill < DateTime.Now ? "bg-danger" : "bg-success")">
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="MembershipEndMonth">Membership valid till</label>
+                            <input value="@User.MembershipValidTill.ToShortDateString()" type="text" class="form-control" id="MembershipEndMonth" readonly/>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="Today">Today</label>
+                            <input value="@DateTime.Now.ToShortDateString()" type="text" class="form-control" id="Today" readonly/>
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label for="Today">Today</label>
-                        <input value="@DateTime.Now.ToShortDateString()" type="text" class="form-control" id="Today" readonly />
-                    </div>
+                </div>
+                <h5 class="ml-2">Rented books</h5>
+                <div class="list-group">
+                    @if (RentedBooks.Length == 0)
+                    {
+                        <div class="list-group-item disabled">No books rented.</div>
+                    }
+                    else
+                    {
+                        @foreach (var rentedBook in RentedBooks)
+                         {
+                             <a href="reservationdetail/@rentedBook.ReservationId" class="list-group-item list-group-item-action">
+                                <b>(rented @(DateTime.Now.Subtract(rentedBook.ReservationDate).Days) day(s) ago)</b>
+                                 @rentedBook.Title by @rentedBook.Author
+                             </a>
+                         }
+                    }
                 </div>
             </div>
         </div>
@@ -65,23 +85,38 @@ else
 @functions
 {
 
-[Parameter] long Id { get; set; }
+    [Parameter] long Id { get; set; }
 
-private User User { get; set; }
+    private User User { get; set; }
+    private ReservedBookModel[] RentedBooks { get; set; }
 
-protected override async Task OnInitAsync()
-{
-    User = new User() { Id = -1 };
-
-    try
+    protected override async Task OnInitAsync()
     {
-        var json = await Http.GetStringAsync($"api/Users/{Id}");
-        User = SimpleJson.DeserializeObject<User>(json, new UserSerializationStrategy());
+        User = new User() { Id = -1 };
+
+        try
+        {
+            var json = await Http.GetStringAsync($"api/Users/{Id}");
+            User = SimpleJson.DeserializeObject<User>(json, new UserSerializationStrategy());
+            await GetUserReservations();
+        }
+        catch (Exception)
+        {
+            User = null;
+        }
     }
-    catch (Exception)
+
+    private async Task GetUserReservations()
     {
-        User = null;
+        try
+        {
+            var json = await Http.GetStringAsync($"api/Reservations/ForUser/{Id}");
+            RentedBooks = SimpleJson.DeserializeObject<ReservedBookModel[]>(json, new ReservedBookSerializationStrategy());
+        }
+        catch (Exception)
+        {
+            RentedBooks = new ReservedBookModel[0];
+        }
     }
-}
 
 }
