@@ -34,36 +34,36 @@ else
 
 @functions
 {
-private PageState State { get; set; }
-protected User[] Users { get; set; }
-protected Book[] Books { get; set; }
-private EntitySelector UsersDropdown { get; set; }
-private EntitySelector BooksDropdown { get; set; }
+    private PageState State { get; set; }
+    protected User[] Users { get; set; }
+    protected Book[] Books { get; set; }
+    private EntitySelector UsersDropdown { get; set; }
+    private EntitySelector BooksDropdown { get; set; }
 
-protected override async Task OnInitAsync()
-{
-    State = PageState.Loading;
-
-    try
+    protected override async Task OnInitAsync()
     {
-        var usersJson = await Http.GetStringAsync("api/Users");
-        Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
+        State = PageState.Loading;
 
-        var booksJson = await Http.GetStringAsync("api/Books/Rentable");
-        Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
+        try
+        {
+            var usersJson = await Http.GetStringAsync("api/Users");
+            Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
 
-        State = PageState.Ready;
+            var booksJson = await Http.GetStringAsync("api/Books/Rentable");
+            Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
+
+            State = PageState.Ready;
+        }
+        catch (Exception)
+        {
+            State = PageState.Error;
+        }
     }
-    catch (Exception)
+
+    private enum PageState
     {
-        State = PageState.Error;
+        Loading = 0,
+        Ready = 1,
+        Error = 2
     }
-}
-
-private enum PageState
-{
-    Loading = 0,
-    Ready = 1,
-    Error = 2
-}
 }

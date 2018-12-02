@@ -1,8 +1,4 @@
-﻿@using InfinityLibrary.Entities
-@using InfinityLibrary.Shared
-@using Microsoft.AspNetCore.Blazor.Browser.Services
-@using SimpleJson
-@page "/reservationdetail/{Id:long}"
+﻿@page "/reservationdetail/{Id:long}"
 @inject HttpClient Http
 
 @if (State == DetailState.Loading)
