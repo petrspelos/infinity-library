@@ -1,5 +1,6 @@
 ﻿@using InfinityLibrary.Entities
 @using InfinityLibrary.Shared
+@using Microsoft.AspNetCore.Blazor.Browser.Services
 @using SimpleJson
 @page "/reservationdetail/{Id:long}"
 @inject HttpClient Http
@@ -31,48 +32,54 @@ else
         </div>
     </div>
 
-    <button class="btn btn-danger mt-2">Close reservation</button>
+    <button class="btn btn-danger mt-2" onclick="@RemoveThisReservation">Close reservation</button>
 }
 
 @functions
 {
 
-[Parameter] protected long Id { get; set; }
+    [Parameter] protected long Id { get; set; }
 
-private DetailState State { get; set; } = DetailState.Loading;
-private User User { get; set; }
-private Book Book { get; set; }
-private DateTime RentDate { get; set; }
+    private DetailState State { get; set; } = DetailState.Loading;
+    private User User { get; set; }
+    private Book Book { get; set; }
+    private DateTime RentDate { get; set; }
 
-protected override async Task OnInitAsync()
-{
-    try
+    protected override async Task OnInitAsync()
     {
-        var reservationJson = await Http.GetStringAsync($"api/Reservations/{Id}");
-        var reservation = SimpleJson.DeserializeObject<Reservation>(reservationJson, new ReservationSerializationStrategy());
+        try
+        {
+            var reservationJson = await Http.GetStringAsync($"api/Reservations/{Id}");
+            var reservation = SimpleJson.DeserializeObject<Reservation>(reservationJson, new ReservationSerializationStrategy());
 
-        RentDate = reservation.Date;
+            RentDate = reservation.Date;
 
-        var userJson = await Http.GetStringAsync($"api/Users/{reservation.UserId}");
-        var bookJson = await Http.GetStringAsync($"api/Books/{reservation.UserId}");
+            var userJson = await Http.GetStringAsync($"api/Users/{reservation.UserId}");
+            var bookJson = await Http.GetStringAsync($"api/Books/{reservation.UserId}");
 
-        User = SimpleJson.DeserializeObject<User>(userJson, new UserSerializationStrategy());
-        Book = SimpleJson.DeserializeObject<Book>(bookJson, new BookSerializationStrategy());
+            User = SimpleJson.DeserializeObject<User>(userJson, new UserSerializationStrategy());
+            Book = SimpleJson.DeserializeObject<Book>(bookJson, new BookSerializationStrategy());
 
-        State = DetailState.Found;
+            State = DetailState.Found;
+        }
+        catch (Exception e)
+        {
+            State = DetailState.NotFound;
+            StateHasChanged();
+        }
     }
-    catch (Exception)
+
+    private async void RemoveThisReservation()
     {
-        Console.WriteLine("Exception was thrown");
         State = DetailState.NotFound;
+        await Http.DeleteAsync($"api/reservations/{Id}");
     }
-}
 
-private enum DetailState
-{
-    Loading = 0,
-    NotFound = 1,
-    Found = 2
-}
+    private enum DetailState
+    {
+        Loading = 0,
+        NotFound = 1,
+        Found = 2
+    }
 
 }

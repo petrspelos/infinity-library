@@ -124,10 +124,12 @@ namespace InfinityLibrary.Server.Controllers
                 return NotFound();
             }
 
+            var userId = reservation.UserId;
+
             _context.Reservation.Remove(reservation);
             await _context.SaveChangesAsync();
 
-            return Ok(reservation);
+            return Ok();
         }
 
         private bool ReservationExists(long id)

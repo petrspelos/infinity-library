@@ -12,6 +12,8 @@ namespace InfinityLibrary.Entities
         public DateTime DateOfBirth { get; set; }
         public DateTime MembershipValidTill { get; set; }
 
+        public bool HasValidMembership => MembershipValidTill > DateTime.Now;
+
         public override string ToString()
         {
             return new StringBuilder()
