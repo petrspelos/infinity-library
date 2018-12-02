@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.JSInterop;
 
 namespace InfinityLibrary.Server.Controllers
 {
@@ -47,19 +48,25 @@ namespace InfinityLibrary.Server.Controllers
             return Ok(user);
         }
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser([FromRoute] long id, [FromBody] User user)
+        // POST: api/Users/Update/5
+        [HttpPost("Update/{id}")]
+        public async Task<IActionResult> PutUser([FromRoute] long id, [FromForm] ClientEditUserModel userModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != user.Id)
+            var user = new User
             {
-                return BadRequest();
-            }
+                Id = id,
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                Address = userModel.Address,
+                Email = userModel.Email,
+                DateOfBirth = new DateTime(userModel.YearOfBirth, userModel.MonthOfBirth, userModel.DayOfBirth),
+                MembershipValidTill = new DateTime(userModel.MembershipEndYear, userModel.MembershipEndMonth, userModel.MembershipEndDay)
+            };
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -79,7 +86,7 @@ namespace InfinityLibrary.Server.Controllers
                 }
             }
 
-            return NoContent();
+            return Redirect($"../../../userdetail/{user.Id}");
         }
 
         // POST: api/Users

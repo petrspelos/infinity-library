@@ -26,7 +26,7 @@ else
                     <p class="mb-1">@user.DateOfBirth.ToShortDateString()<br/>@user.Address</p>
                     <div>
                         <a href="userdetail/@user.Id" role="button" class="btn btn-secondary">Details</a>
-                        <button class="btn btn-primary">Edit</button>
+                        <a href="edituser/@user.Id" role="button" class="btn btn-primary">Edit</a>
                         <button class="btn btn-danger" onclick="@(() => DeleteUser(user.Id))">Delete</button>
                     </div>
                 </div>

@@ -1,0 +1,135 @@
+﻿@using InfinityLibrary.Entities
+@using InfinityLibrary.Shared
+@using SimpleJson
+@page "/edituser/{Id:long}"
+@inject HttpClient Http
+
+<p>Edit User</p>
+
+@if (User is null)
+{
+    <p>This user does not exist...</p>
+}
+else if (User.Id == -1)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <form class="was-validated" method="post" action="api/Users/Update/@User.Id">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="FirstName">First Name</label>
+                <input bind="FirstName" name="FirstName" type="text" class="form-control" id="FirstName" placeholder="Jon" required />
+                <div class="invalid-feedback">First name must be filled.</div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="LastName">Last Name</label>
+                <input bind="LastName" name="LastName" type="text" class="form-control" id="LastName" placeholder="Doe" required />
+                <div class="invalid-feedback">Last name must be filled.</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="Email">Email</label>
+                <input bind="Email" name="Email" type="email" class="form-control" id="Email" placeholder="example@example.com" required />
+                <div class="invalid-feedback">Must be a valid email address.</div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="DayOfBirth">Day of birth</label>
+                        <input bind="DayOfBirth" name="DayOfBirth" type="number" class="form-control" id="DayOfBirth" placeholder="25" min="1" max="30" required />
+                        <div class="invalid-feedback">Must be a number between 1 and 30 (inclusive).</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="MonthOfBirth">Month of birth</label>
+                        <input bind="MonthOfBirth" name="MonthOfBirth" type="number" class="form-control" id="MonthOfBirth" placeholder="7" min="1" max="12" required />
+                        <div class="invalid-feedback">Must be a number between 1 and 12 (inclusive).</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="YearOfBirth">Year of birth</label>
+                        <input bind="YearOfBirth" name="YearOfBirth" type="number" class="form-control" id="YearOfBirth" placeholder="1990" min="1959" max="@DateTime.Now.Year" required />
+                        <div class="invalid-feedback">Must be a whole number between 1959 and @DateTime.Now.Year.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Address">Address</label>
+            <input bind="Address" name="Address" type="text" class="form-control" id="Address" placeholder="1234 Main St" required />
+            <div class="invalid-feedback">Address must be filled.</div>
+        </div>
+        <div class="form-group col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Membership valid till</h5>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="MembershipEndDay">Day</label>
+                            <input bind="MembershipEndDay" name="MembershipEndDay" type="number" class="form-control" id="MembershipEndDay" placeholder="25" min="1" max="30" required />
+                            <div class="invalid-feedback">Must be a number between 1 and 30 (inclusive).</div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="MembershipEndMonth">Month</label>
+                            <input bind="MembershipEndMonth" name="MembershipEndMonth" type="number" class="form-control" id="MembershipEndMonth" placeholder="7" min="1" max="12" required />
+                            <div class="invalid-feedback">Must be a number between 1 and 12 (inclusive).</div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="MembershipEndYear">Year</label>
+                            <input bind="MembershipEndYear" name="MembershipEndYear" type="number" class="form-control" id="MembershipEndYear" placeholder="1990" min="@DateTime.Now.Year" max="@(DateTime.Now.Year + 5)" required />
+                            <div class="invalid-feedback">Must be a whole number between @DateTime.Now.Year and @(DateTime.Now.Year + 5).</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+}
+
+@functions
+{
+
+    [Parameter] long Id { get; set; }
+
+    private User User { get; set; }
+
+    private string FirstName { get; set; }
+    private string LastName { get; set; }
+    private string Email { get; set; }
+    private int DayOfBirth { get; set; }
+    private int MonthOfBirth { get; set; }
+    private int YearOfBirth { get; set; }
+    private string Address { get; set; }
+    private int MembershipEndDay { get; set; }
+    private int MembershipEndMonth { get; set; }
+    private int MembershipEndYear { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        User = new User() { Id = -1 };
+
+        try
+        {
+            var json = await Http.GetStringAsync($"api/Users/{Id}");
+            User = SimpleJson.DeserializeObject<User>(json, new UserSerializationStrategy());
+
+            FirstName = User.FirstName;
+            LastName = User.LastName;
+            Email = User.Email;
+            DayOfBirth = User.DateOfBirth.Day;
+            MonthOfBirth = User.DateOfBirth.Month;
+            YearOfBirth = User.DateOfBirth.Year;
+            Address = User.Address;
+            MembershipEndDay = User.MembershipValidTill.Day;
+            MembershipEndMonth = User.MembershipValidTill.Month;
+            MembershipEndYear = User.MembershipValidTill.Year;
+        }
+        catch (Exception)
+        {
+            User = null;
+        }
+    }
+
+}
