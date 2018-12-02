@@ -51,7 +51,7 @@ else
             RentDate = reservation.Date;
 
             var userJson = await Http.GetStringAsync($"api/Users/{reservation.UserId}");
-            var bookJson = await Http.GetStringAsync($"api/Books/{reservation.UserId}");
+            var bookJson = await Http.GetStringAsync($"api/Books/{reservation.BookId}");
 
             User = SimpleJson.DeserializeObject<User>(userJson, new UserSerializationStrategy());
             Book = SimpleJson.DeserializeObject<Book>(bookJson, new BookSerializationStrategy());

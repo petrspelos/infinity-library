@@ -124,6 +124,11 @@ namespace InfinityLibrary.Server.Controllers
                 return NotFound();
             }
 
+            if (_context.Reservation.Any(r => r.BookId == id))
+            {
+                return BadRequest("Book is reserved");
+            }
+
             _context.Book.Remove(book);
             await _context.SaveChangesAsync();
 

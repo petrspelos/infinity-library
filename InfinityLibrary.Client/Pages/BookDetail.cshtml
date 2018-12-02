@@ -1,10 +1,80 @@
 ﻿@page "/bookdetail/{Id:long}"
+@inject HttpClient Http
 
-<p>Book detail</p>
+@if (State == PageState.Loading)
+{
+    <p>Loading...</p>
+}
+else if (State == PageState.Error)
+{
+    <p>Sorry, there was an error with your request.</p>
+    <p>Please try again in a little bit.</p>
+}
+else
+{
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="Title">Title</label>
+            <input type="text" class="form-control" id="Title" value="@FoundBook.Title" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="Genre">Genre</label>
+            <input type="text" class="form-control" id="Genre" value="@FoundBook.Genre" readonly>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="Author">Author / Authors</label>
+            <input type="text" class="form-control" id="Author" value="@FoundBook.Author" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="PublicationYear">Year of publication</label>
+            <input type="number" class="form-control" id="PublicationYear" max="@DateTime.Today.Year" value="@FoundBook.PublicationYear" readonly>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="Copies">Copies in this library</label>
+            <input type="number" class="form-control" id="Copies" value="@FoundBook.Copies" readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="ThumbnailUrl">Book's Thumbnail URL</label>
+            <input type="text" class="form-control" id="ThumbnailUrl" value="@FoundBook.ThumbnailUrl" readonly>
+        </div>
+    </div>
+    <a href="editbook/@Id" role="button" class="btn btn-secondary">Edit</a>
+}
 
 @functions
 {
 
-    [Parameter] protected long Id { get; set; }
+[Parameter] protected long Id { get; set; }
 
+public Book FoundBook { get; set; }
+
+private PageState State { get; set; }
+
+protected override async Task OnInitAsync()
+{
+    State = PageState.Loading;
+
+    try
+    {
+        var json = await Http.GetStringAsync($"api/Books/{Id}");
+        FoundBook = SimpleJson.DeserializeObject<Book>(json, new BookSerializationStrategy());
+
+        State = PageState.Ready;
+    }
+    catch (Exception)
+    {
+        State = PageState.Error;
+    }
+}
+
+private enum PageState
+{
+    Loading = 0,
+    Ready = 1,
+    Error = 2
+}
 }

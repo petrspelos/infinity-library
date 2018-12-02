@@ -1,5 +1,6 @@
 ﻿@inject HttpClient Http
 @page "/"
+@using System.Net
 
 
 @if (Books is null)
@@ -16,6 +17,8 @@ else
             <li>
                 <img src="@((book.ThumbnailUrl == "None") ? MissingImageUrl : book.ThumbnailUrl)" height="100" width="80" />
                 <b>@book.Title</b> by @book.Author
+                <a href="bookdetail/@book.Id" role="button" class="btn btn-primary">Details</a>
+                <button class="btn btn-danger" onclick="@(() => DeleteBook(book.Id))">Delete</button>
             </li>
         }
     </ul>
@@ -23,20 +26,29 @@ else
 
 @functions
 {
-    
-    protected User[] Users { get; set; }
-    protected Book[] Books { get; set; }
 
+    protected Book[] Books { get; set; }
 
     private string MissingImageUrl = "https://pbs.twimg.com/profile_images/600060188872155136/st4Sp6Aw_400x400.jpg";
 
     protected override async Task OnInitAsync()
     {
-        var usersJson = await Http.GetStringAsync("api/Users");
-        Users = SimpleJson.DeserializeObject<User[]>(usersJson, new UserSerializationStrategy());
-
         var booksJson = await Http.GetStringAsync("api/Books");
         Books = SimpleJson.DeserializeObject<Book[]>(booksJson, new BookSerializationStrategy());
     }
 
+    private async void DeleteBook(long bookId)
+    {
+        var response = await Http.DeleteAsync($"api/Books/{bookId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            Books = Books.Where(u => u.Id != bookId).ToArray();
+            StateHasChanged();
+        }
+        else if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            Console.WriteLine("Book is reserved");
+        }
+    }
 }

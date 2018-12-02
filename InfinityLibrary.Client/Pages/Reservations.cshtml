@@ -23,7 +23,7 @@ else
         {
             @foreach (var reservation in FoundReservations)
              {
-                 <a href="reservationdetail/@reservation.Id" class="list-group-item list-group-item-action"><b>(rented on @reservation.ReservationDate.ToShortDateString())</b> @reservation.Title by @reservation.Author</a>
+                 <a href="reservationdetail/@reservation.ReservationId" class="list-group-item list-group-item-action"><b>(rented on @reservation.ReservationDate.ToShortDateString())</b> @reservation.Title by @reservation.Author</a>
              }
         }
     </div>
@@ -43,8 +43,6 @@ else
         {
             var reservationsJson = await Http.GetStringAsync("api/Reservations/Models");
 
-            Console.WriteLine(reservationsJson);
-
             FoundReservations = SimpleJson
                 .DeserializeObject<ReservedBookModel[]>(reservationsJson, new ReservedBookSerializationStrategy())
                 .OrderByDescending(b => b.ReservationDate)
@@ -54,7 +52,6 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             State = PageState.Error;
         }
     }
