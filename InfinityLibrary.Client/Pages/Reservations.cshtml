@@ -1,3 +1,69 @@
-﻿@page "/reservations"
+﻿@using InfinityLibrary.Entities
+@using InfinityLibrary.Shared
+@using InfinityLibrary.Shared.SharedModels
+@using SimpleJson
+@page "/reservations"
+@inject HttpClient Http
 
-<p>Reservations</p>
+<h4>Reservations</h4>
+
+@if (State == PageState.Error)
+{
+    <p>Sorry, there was an error with your request.</p>
+}
+else if(State == PageState.Loading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="list-group">
+        @if (FoundReservations.Length == 0)
+        {
+            <div class="list-group-item list-group-item-action">No reservations found...</div>
+        }
+        else
+        {
+            @foreach (var reservation in FoundReservations)
+             {
+                 <a href="reservationdetail/@reservation.Id" class="list-group-item list-group-item-action"><b>(rented on @reservation.ReservationDate.ToShortDateString())</b> @reservation.Title by @reservation.Author</a>
+             }
+        }
+    </div>
+}
+
+@functions
+{
+
+    private PageState State { get; set; }
+    private ReservedBookModel[] FoundReservations { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        State = PageState.Loading;
+
+        try
+        {
+            var reservationsJson = await Http.GetStringAsync("api/Reservations/Models");
+
+            FoundReservations = SimpleJson
+                .DeserializeObject<ReservedBookModel[]>(reservationsJson, new ReservedBookSerializationStrategy())
+                .OrderByDescending(b => b.ReservationDate)
+                .ToArray();
+
+            State = PageState.Ready;
+        }
+        catch (Exception)
+        {
+            State = PageState.Error;
+        }
+    }
+
+    private enum PageState
+    {
+        Loading = 0,
+        Ready = 1,
+        Error = 2
+    }
+
+}

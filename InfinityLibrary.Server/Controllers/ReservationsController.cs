@@ -27,6 +27,13 @@ namespace InfinityLibrary.Server.Controllers
             return _context.Reservation;
         }
 
+        // GET: api/Reservations/Models
+        [HttpGet("Models")]
+        public IEnumerable<ReservedBookModel> GetReservationModels()
+        {
+            return _context.Reservation.Select(ReservationToReservedBook);
+        }
+
         // GET: api/Reservations/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReservation([FromRoute] long id)
