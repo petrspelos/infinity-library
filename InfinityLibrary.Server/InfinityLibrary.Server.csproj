@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InfinityLibrary.Client\InfinityLibrary.Client.csproj" />
-    <ProjectReference Include="..\InfinityLibrary.Entities\InfinityLibrary.Entities.csproj" />
     <ProjectReference Include="..\InfinityLibrary.Shared\InfinityLibrary.Shared.csproj" />
   </ItemGroup>
 
