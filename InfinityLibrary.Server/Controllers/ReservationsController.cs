@@ -1,5 +1,4 @@
-﻿using InfinityLibrary.Entities;
-using InfinityLibrary.Server.Models;
+﻿using InfinityLibrary.Server.Models;
 using InfinityLibrary.Shared.SharedModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,11 +29,11 @@ namespace InfinityLibrary.Server.Controllers
             return _reservationProvider.GetAll();
         }
 
-        // GET: api/Reservations/Models
-        [HttpGet("Models")]
-        public IEnumerable<ReservedBookModel> GetReservationModels()
+        // GET: api/Reservations/Readable
+        [HttpGet("Readable")]
+        public IEnumerable<ReservationViewModel> GetReservationViewModels()
         {
-            return _context.Reservation.Select(ReservationToReservedBook);
+            return _reservationProvider.GetAllViewModels();
         }
 
         // GET: api/Reservations/5

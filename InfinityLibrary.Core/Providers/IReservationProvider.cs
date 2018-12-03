@@ -6,5 +6,6 @@ namespace InfinityLibrary.Core.Providers
     public interface IReservationProvider
     {
         IEnumerable<ReservationModel> GetAll();
+        IEnumerable<ReservationViewModel> GetAllViewModels();
     }
 }
