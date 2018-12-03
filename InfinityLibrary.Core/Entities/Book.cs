@@ -1,4 +1,4 @@
-﻿namespace InfinityLibrary.Entities
+﻿namespace InfinityLibrary.Core.Entities
 {
     public class Book : Entity
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace InfinityLibrary.Entities
+namespace InfinityLibrary.Core.Entities
 {
     public class User : Entity
     {

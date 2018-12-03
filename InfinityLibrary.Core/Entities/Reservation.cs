@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfinityLibrary.Entities
+namespace InfinityLibrary.Core.Entities
 {
     public class Reservation : Entity
     {
