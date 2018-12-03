@@ -1,10 +1,9 @@
-﻿using InfinityLibrary.Shared;
+﻿using InfinityLibrary.Core.Providers;
+using InfinityLibrary.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using InfinityLibrary.Core.Providers;
 
 namespace InfinityLibrary.Server.Controllers
 {
@@ -12,101 +11,76 @@ namespace InfinityLibrary.Server.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly IBookProvider _context;
+        private readonly IBookProvider _bookProvider;
 
-        public BooksController(IBookProvider context)
+        public BooksController(IBookProvider bookProvider)
         {
-            _context = context;
+            _bookProvider = bookProvider;
         }
 
         // GET: api/Books
         [HttpGet]
-        public IEnumerable<Book> GetBook()
+        public IEnumerable<BookModel> GetBook()
         {
-            return _context.Book;
+            return _bookProvider.GetAll();
         }
 
         // GET: api/Books/Rentable
         [HttpGet("Rentable")]
-        public IEnumerable<Book> GetBooksRentable()
+        public IEnumerable<BookModel> GetRentableBooks()
         {
-            var allBooks = _context.Book.ToList();
-            var allReservations = _context.Reservation.ToList();
-
-            return allBooks.Where(b => b.Copies > allReservations.Count(r => r.BookId == b.Id));
+            return _bookProvider.GetAllRentable();
         }
 
         // GET: api/Books/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBook([FromRoute] long id)
+        public IActionResult GetBook([FromRoute] long id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var book = await _context.Book.FindAsync(id);
+            var book = _bookProvider.GetById(id);
 
-            if (book == null)
-            {
-                return NotFound();
-            }
+            if (book == null) { return NotFound(); }
 
             return Ok(book);
         }
 
         // POST: api/Books
         [HttpPost]
-        public async Task<IActionResult> PostBook([FromForm] Book book)
+        public async Task<IActionResult> PostBook([FromForm] BookModel book)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+
+            try
             {
-                return BadRequest(ModelState);
+                await _bookProvider.Add(book);
             }
-
-            _context.Book.Add(book);
-            await _context.SaveChangesAsync();
-
-            return Redirect($"../bookdetail/{book.Id}");
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            
+            return Redirect($"../bookdetail/{book.Id}"); // TODO: Handle with Blazor instead
         }
 
         // POST: api/Books/Update/5
         [HttpPost("Update/{id}")]
-        public async Task<IActionResult> PutBook([FromRoute] long id, [FromForm] Book book)
+        public async Task<IActionResult> UpdateBookById([FromRoute] long id, [FromForm] BookModel book)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
             book.Id = id;
-            
-            var rentedCopiesCount = _context.Reservation.Count(r => r.BookId == id);
-
-            if (book.Copies < rentedCopiesCount)
-            {
-                return Redirect($"../../../error/{ErrorMessage.InvalidBookCountEdit.ToString()}");
-            }
-
-            _context.Entry(book).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _bookProvider.Update(book);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (InvalidOperationException e)
             {
-                if (!BookExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(e.Message);
             }
 
-            return Redirect($"../../../bookdetail/{book.Id}");
+            return Redirect($"../../../bookdetail/{book.Id}"); // TODO: Handle with Blazor instead
         }
 
         // DELETE: api/Books/5
@@ -118,26 +92,16 @@ namespace InfinityLibrary.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var book = await _context.Book.FindAsync(id);
-            if (book == null)
+            try
             {
-                return NotFound();
+                await _bookProvider.DeleteById(id);
             }
-
-            if (_context.Reservation.Any(r => r.BookId == id))
+            catch (InvalidOperationException e)
             {
-                return BadRequest("Book is reserved");
+                return BadRequest(e.Message);
             }
-
-            _context.Book.Remove(book);
-            await _context.SaveChangesAsync();
-
-            return Ok(book);
-        }
-
-        private bool BookExists(long id)
-        {
-            return _context.Book.Any(e => e.Id == id);
+            
+            return Ok();
         }
     }
 }
