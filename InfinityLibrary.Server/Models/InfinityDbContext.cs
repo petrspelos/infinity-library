@@ -9,7 +9,7 @@ namespace InfinityLibrary.Server.Models
         public DbSet<User> User { get; set; }
         public DbSet<Reservation> Reservation { get; set; }
 
-        public InfinityDbContext(DbContextOptions<InfinityDbContext> options) : base(options)
+        public InfinityDbContext(DbContextOptions options) : base(options)
         {
         }
     }
