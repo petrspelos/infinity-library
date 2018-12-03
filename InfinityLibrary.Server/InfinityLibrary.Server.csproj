@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InfinityLibrary.Client\InfinityLibrary.Client.csproj" />
+    <ProjectReference Include="..\InfinityLibrary.Database\InfinityLibrary.Database.csproj" />
+    <ProjectReference Include="..\InfinityLibrary.Providers\InfinityLibrary.Providers.csproj" />
     <ProjectReference Include="..\InfinityLibrary.Shared\InfinityLibrary.Shared.csproj" />
   </ItemGroup>
 

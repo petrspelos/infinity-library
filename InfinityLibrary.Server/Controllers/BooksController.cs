@@ -1,13 +1,10 @@
-﻿using InfinityLibrary.Entities;
-using InfinityLibrary.Server.Models;
+﻿using InfinityLibrary.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using System.Web;
-using InfinityLibrary.Shared;
+using InfinityLibrary.Core.Providers;
 
 namespace InfinityLibrary.Server.Controllers
 {
@@ -15,9 +12,9 @@ namespace InfinityLibrary.Server.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly InfinityDbContext _context;
+        private readonly IBookProvider _context;
 
-        public BooksController(InfinityDbContext context)
+        public BooksController(IBookProvider context)
         {
             _context = context;
         }

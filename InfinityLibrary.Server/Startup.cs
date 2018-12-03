@@ -1,4 +1,4 @@
-using InfinityLibrary.Server.Models;
+using InfinityLibrary.Database.Contexts;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Net.Mime;
+using InfinityLibrary.Core.Providers;
+using InfinityLibrary.Core.Repositories;
+using InfinityLibrary.Database.Repositories;
+using InfinityLibrary.Providers;
 
 namespace InfinityLibrary.Server
 {
@@ -28,6 +32,16 @@ namespace InfinityLibrary.Server
             });
 
             services.AddDbContext<InfinityDbContext>(options => options.UseSqlite("Data Source=InfinityLibrary.db"));
+
+            // Repositories
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IBookRepository, BookRepository>();
+            services.AddSingleton<IReservationRepository, ReservationRepository>();
+
+            // Providers
+            services.AddSingleton<IUserProvider, UserProvider>();
+            services.AddSingleton<IBookProvider, BookProvider>();
+            services.AddSingleton<IReservationProvider, ReservationProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
