@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InfinityLibrary.Core.Providers;
+using InfinityLibrary.Shared.Models;
 
 namespace InfinityLibrary.Server.Controllers
 {
@@ -14,18 +16,18 @@ namespace InfinityLibrary.Server.Controllers
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly InfinityDbContext _context;
+        private readonly IReservationProvider _reservationProvider;
 
-        public ReservationsController(InfinityDbContext context)
+        public ReservationsController(IReservationProvider reservationProvider)
         {
-            _context = context;
+            _reservationProvider = reservationProvider;
         }
 
         // GET: api/Reservations
         [HttpGet]
-        public IEnumerable<Reservation> GetReservation()
+        public IEnumerable<ReservationModel> GetReservation()
         {
-            return _context.Reservation;
+            return _reservationProvider.GetAll();
         }
 
         // GET: api/Reservations/Models
