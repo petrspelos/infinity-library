@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfinityLibrary.Client", "I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfinityLibrary.Shared", "InfinityLibrary.Shared\InfinityLibrary.Shared.csproj", "{7D4E29C5-0095-420D-8175-C02E37CA5268}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfinityLibrary.Entities", "InfinityLibrary.Entities\InfinityLibrary.Entities.csproj", "{4E493D04-AC17-4F7E-A9B9-D9425F391EE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfinityLibrary.Entities", "InfinityLibrary.Entities\InfinityLibrary.Entities.csproj", "{4E493D04-AC17-4F7E-A9B9-D9425F391EE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfinityLibrary.SimpleJson", "InfinityLibrary.SimpleJson\InfinityLibrary.SimpleJson.csproj", "{B57F73BB-4B32-43EF-8E97-03A471163D68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4E493D04-AC17-4F7E-A9B9-D9425F391EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E493D04-AC17-4F7E-A9B9-D9425F391EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E493D04-AC17-4F7E-A9B9-D9425F391EE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B57F73BB-4B32-43EF-8E97-03A471163D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B57F73BB-4B32-43EF-8E97-03A471163D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B57F73BB-4B32-43EF-8E97-03A471163D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B57F73BB-4B32-43EF-8E97-03A471163D68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

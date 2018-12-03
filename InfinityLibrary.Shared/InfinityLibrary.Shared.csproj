@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InfinityLibrary.Entities\InfinityLibrary.Entities.csproj" />
+    <ProjectReference Include="..\InfinityLibrary.SimpleJson\InfinityLibrary.SimpleJson.csproj" />
   </ItemGroup>
 
 </Project>
